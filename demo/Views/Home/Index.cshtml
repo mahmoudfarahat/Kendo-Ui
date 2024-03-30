@@ -1,0 +1,22 @@
+﻿ 
+
+@*@model List<demo.Models.Product>*@
+@*@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = "Kendo UI Example";
+}
+
+@(
+    Html.Kendo().Grid(Model)
+        .Name("grid")
+        .Columns(columns =>
+        {
+            columns.Bound(p => p.ProductId).Title("Product ID");
+            columns.Bound(p => p.Name).Title("Name");
+            columns.Bound(p => p.Price).Title("Price");
+        })
+        .Pageable()
+        .Sortable()
+        .Filterable()
+)*@

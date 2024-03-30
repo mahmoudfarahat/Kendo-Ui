@@ -1,0 +1,157 @@
+﻿@model IEnumerable<demo.Models.Visit>
+@using Kendo.Mvc.UI
+@{
+    ViewBag.Title = "Index";
+}
+
+@section Styles
+{
+    <style type="text/css">
+        .grid-header {
+            display:flex;
+                justify-content: space-between;
+                align-items:center;
+        }
+        .btn-create{
+           
+            height : 50px;
+        }
+
+    </style>
+}
+
+<div id="resultDiv">
+    @* Result will be displayed here *@
+</div>
+
+
+
+<div class="grid-header">
+
+
+
+    <h2>Index</h2>
+
+    <button type="button" class="btn btn-primary btn-create" data-toggle="modal" data-target="#exampleModal">
+        Create Visit
+    </button>
+
+</div>
+
+
+
+@(Html.Kendo().Grid(Model)
+    .Name("grid")
+
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.VisitId);
+        columns.Bound(p => p.Title);
+        columns.Bound(p => p.From);
+        columns.Bound(p => p.To);
+        columns.Bound(p => p.NumberOfDays);
+        columns.Bound(p => p.VisitTypeId);
+        columns.Bound(p => p.Notes);
+        columns.Bound(p => p.VisitId).Title("Actions").ClientTemplate("<Button type='button' data-visitid='#= VisitId #' class='btn-danger ' id='deleteVisit'>Delete</Button>");
+    })
+    .Pageable(pageable => pageable
+        .Input(true)
+        .Numeric(true)
+        .PageSizes(new[] { 10, 20, 50, 100 }) // Set your desired page sizes
+        .Refresh(true)
+    )
+    .Sortable()
+
+    .Filterable()
+    .DataSource(dataSource => dataSource
+        .Ajax()
+         .PageSize(10)
+        .Read(read => read.Action("GetAllVisits", "Visits"))
+    )
+)
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create Visit</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Ajax.BeginForm("CreateVisit", "Visits", new AjaxOptions
+                {
+                    HttpMethod = "POST",
+                    UpdateTargetId = "resultDiv",
+                    OnSuccess = "handleSuccess"
+                }, new { id = "create-from" }))
+
+                {<div class="form-group">
+    <label for="usr">Title:</label>
+    @*<input type="text" name="Title" class="form-control" id="usr">*@
+    @(Html.Kendo().TextBox()
+        .Name("Title") // The name of the TextBox is mandatory. It specifies the "id" attribute of the TextBox.
+        .Value("John Doe") // Set the value of the TextBox.
+    )
+</div>
+                    <div class="form-group">
+                        <label for="pwd">From:</label>
+                        <input type="date" name="From" class="form-control" id="pwd">
+                    </div>
+                    <div class="form-group">
+                        <label for="usr">To:</label>
+                        <input type="date" name="To" class="form-control" id="usr">
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Number of Days:</label>
+                        <input type="number" name="NumberOfDays" class="form-control" id="pwd">
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Notes</label>
+                        <input type="text" name="Notes" class="form-control" id="pwd">
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Visit Type</label>
+                        <input type="number" name="VisitTypeId" class="form-control" id="pwd">
+                    </div>
+
+
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" form="create-from" class="btn btn-primary">Save changes</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+
+    <script>
+        function handleSuccess(result) {
+
+            var grid = $("#grid").data("kendoGrid");
+
+            // Reload the grid data
+            grid.dataSource.read();
+
+            $('#exampleModal').modal('toggle');
+            $('.modal-backdrop').remove();
+        }
+
+
+
+        $(document).ready(function () {
+             $('#grid').on('click', '#deleteVisit', function () {
+                var visitId = $(this).data("visitid");
+                 console.log("Delete Visit ID: " + visitId);
+
+             });
+        });
+    </script>
+
+}
