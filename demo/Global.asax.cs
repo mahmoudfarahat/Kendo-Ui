@@ -17,6 +17,8 @@ namespace demo
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AutofacConfig.Configure();
+            ModelBinders.Binders.Add(typeof(DateTime), new CustomDateModelBinder());
+
         }
     }
 }

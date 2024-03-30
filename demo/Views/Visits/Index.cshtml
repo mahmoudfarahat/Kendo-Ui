@@ -91,17 +91,18 @@
     <label for="usr">Title:</label>
     @*<input type="text" name="Title" class="form-control" id="usr">*@
     @(Html.Kendo().TextBox()
-        .Name("Title") // The name of the TextBox is mandatory. It specifies the "id" attribute of the TextBox.
-        .Value("John Doe") // Set the value of the TextBox.
+        .Name("Title")  
+        .Value("John Doe")
+         .HtmlAttributes(new { @class = "form-control" })
     )
 </div>
+                 <div class="form-group">
+                     <label  >From:</label>
+                      <input id="datepicker-from" name="From" class="form-control" />
+                 </div>
                     <div class="form-group">
-                        <label for="pwd">From:</label>
-                        <input type="date" name="From" class="form-control" id="pwd">
-                    </div>
-                    <div class="form-group">
-                        <label for="usr">To:</label>
-                        <input type="date" name="To" class="form-control" id="usr">
+                        <label  >To:</label>
+                        <input id="datepicker-to"   name="To" class="form-control"  />
                     </div>
                     <div class="form-group">
                         <label for="pwd">Number of Days:</label>
@@ -160,6 +161,20 @@
                  console.log("Delete Visit ID: " + visitId);
 
              });
+        });
+
+
+        $(document).ready(function () {
+            // create DatePicker from input HTML element
+            $("#datepicker-to").kendoDatePicker({
+                format: "dd/MM/yyyy",
+                dateInput: true
+            });
+
+            $("#datepicker-from").kendoDatePicker({
+                format: "dd/MM/yyyy",
+                dateInput: true
+            });
         });
     </script>
 

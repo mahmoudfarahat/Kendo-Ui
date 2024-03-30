@@ -162,6 +162,7 @@
     <Compile Include="AutofacConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\VisitsController.cs" />
+    <Compile Include="CustomDateModelBinder.cs" />
     <Compile Include="DataConfiguration\VisitConfiguration.cs" />
     <Compile Include="DataConfiguration\VisitTypeConfiguration.cs" />
     <Compile Include="Global.asax.cs">
