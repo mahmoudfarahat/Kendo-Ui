@@ -43,7 +43,7 @@ namespace demo.Controllers
         [HttpPost]
         public void CreateVisit(VisitViewModel visitViewModel)
         {
-        
+
             this.visitsService.Add(visitViewModel);
         }
 

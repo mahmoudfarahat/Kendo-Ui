@@ -117,11 +117,12 @@
                     </div>
 
 
+
                 }
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" form="create-from" class="btn btn-primary">Save changes</button>
+                <button type="submit" form="create-from" id="btn-submit" class="btn btn-primary">Save changes</button>
 
             </div>
         </div>
@@ -132,16 +133,24 @@
 @section scripts {
 
     <script>
+
         function handleSuccess(result) {
 
             var grid = $("#grid").data("kendoGrid");
-
             // Reload the grid data
             grid.dataSource.read();
+            console.log('handleSuccess')
+            $('#btn-submit').html("Save changes");
 
-            $('#exampleModal').modal('toggle');
-            $('.modal-backdrop').remove();
         }
+
+        $(document).ready(function () {
+            $('#btn-submit').on('click', function () {
+                $(this).html("Saving...");
+                console.log('click')
+                $('#exampleModal').modal('toggle');
+            })
+        });
 
 
 
