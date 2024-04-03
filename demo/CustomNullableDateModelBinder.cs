@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace demo
 {
-    public class CustomDateModelBinder : IModelBinder
+    public class CustomNullableDateModelBinder : IModelBinder
     {
         public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
         {

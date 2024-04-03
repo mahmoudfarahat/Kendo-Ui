@@ -4,8 +4,10 @@ using demo.Services.Interfaces;
 using demo.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
+ 
 
 namespace demo.Repositories.Implementions
 {
@@ -18,11 +20,23 @@ namespace demo.Repositories.Implementions
             this.db = db;
         }
 
+        public T GetByid(TKey tkey)
+        {
+            return db.Set<T>().Find(tkey);
+       
+        }
         public void Add(T entity)
         {
             db.Set<T>().Add(entity);
             db.SaveChanges();
         }
+
+        public void Update(T entity)
+        {
+            db.Entry(entity).State = EntityState.Modified;
+            db.SaveChanges();
+        }
+
 
         public int Count()
         {

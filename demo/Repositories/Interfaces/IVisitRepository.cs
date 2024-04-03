@@ -11,5 +11,8 @@ namespace demo.Repositories.Interfaces
     {
         IReadOnlyList<Visit> GetAllPaginated(int page, int pageSize);
 
+       
+
+
     }
 }

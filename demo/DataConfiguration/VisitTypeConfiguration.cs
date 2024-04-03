@@ -13,7 +13,7 @@ namespace demo.DataConfiguration
         public VisitTypeConfiguration()
         {
             ToTable("VisitType");
-            Property(x => x.Id).HasColumnName("Id").HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            Property(x => x.Id).HasColumnName("VisitTypeId").HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             HasKey(x => x.Id);
             Property(x => x.Name).HasColumnName("Name");
         }

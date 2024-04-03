@@ -1,0 +1,210 @@
+﻿@model  demo.ViewModels.VisitViewModel
+@using Kendo.Mvc.UI
+
+@{
+    var ControllerAction = "";
+    var HttpMethod = "";
+    if (Model.VisitId == 0)
+    {
+        HttpMethod = "POST";
+        ControllerAction = "Create";
+    }
+    else
+    {
+        ControllerAction = "Edit";
+        HttpMethod = "PUT";
+    }
+}
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create Visit</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                @using (Ajax.BeginForm(ControllerAction, "Visits", new AjaxOptions
+                {
+                    HttpMethod = HttpMethod,
+                    UpdateTargetId = "resultDiv",
+                    OnSuccess = "handleSuccess"
+                }, new { id = "create-from" }))
+
+                {
+
+                    <input type="hidden" id="visitIdInput" name="VisitId" value="@Model.VisitId">
+
+
+                    <div class="form-group">
+                        <label for="usr">Title:</label>
+                        @*<input type="text" name="Title" class="form-control" id="usr">*@
+                        @(Html.Kendo().TextBox()
+                              .Name("Title")
+                              .Value(@Model.Title)
+                              .HtmlAttributes(new { @class = "form-control" , @id = "Title" })
+                         )
+                        <span asp-validation-for="Title" class="text-danger"> </span>
+
+                    </div>
+                    <div class="form-group">
+                        <label>From:</label>
+                        <input id="datepicker-from" name="From" class="form-control" @*value="@Model.From"*@ />
+                    </div>
+                    <div class="form-group">
+                        <label>To:</label>
+                        <input id="datepicker-to" name="To" class="form-control" @*value="@Model.To"*@ />
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Number of Days:</label>
+                        <input type="number" name="NumberOfDays" class="form-control" id="NumberOfDays" value="@Model.NumberOfDays">
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Notes</label>
+                        <input type="text" name="Notes" class="form-control" id="notes" value="@Model.Notes">
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Visit Type</label>
+
+                        <input id="comboBox" name="VisitTypeId" class="form-control" style="width: 200px;" value="@Model.VisitTypeId" />
+
+                    </div>
+
+
+
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" form="create-from" id="btn-submit" class="btn btn-primary">Save changes</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    function handleSuccess(result) {
+
+        var grid = $("#grid").data("kendoGrid");
+        // Reload the grid data
+        grid.dataSource.read();
+        console.log('handleSuccess')
+        $('#btn-submit').html("Save changes");
+
+    }
+
+    $(document).ready(function () {
+
+        $("#datepicker-to").kendoDatePicker({
+            format: "dd/MM/yyyy",
+
+            value: '@((Model.To != null)? Model.To.Value.ToString("yyyy-MM-dd"): "")'
+
+        });
+
+        $("#datepicker-from").kendoDatePicker({
+            format: "dd/MM/yyyy",
+            value: '@((Model.From != null)? Model.From.Value.ToString("yyyy-MM-dd"):"")'
+
+
+        });
+
+
+
+        function calculateDays() {
+
+            var fromDate = $("#datepicker-from").val();
+            var toDate = $("#datepicker-to").val();
+
+            console.log(fromDate,toDate)
+
+            if (fromDate && toDate) {
+                var parts1 = fromDate.split('/');
+                var parts2 = toDate.split('/');
+
+                var fromDate = new Date(parts1[2], parts1[1] - 1, parts1[0]);
+                var toDate = new Date(parts2[2], parts2[1] - 1, parts2[0]);
+
+
+
+                var difference = Math.abs(toDate - fromDate);
+
+                console.log(difference)
+
+                var daysDiff = Math.ceil(difference / (1000 * 3600 * 24));
+                console.log(daysDiff)
+
+                $("#NumberOfDays").val(daysDiff+1);
+            }
+
+        }
+
+        $("#datepicker-from, #datepicker-to").change(calculateDays);
+
+        $("#NumberOfDays").on("input", function () {
+            var fromDate = $("#datepicker-from").val();
+            var daysToAdd = parseInt($(this).val());
+            if (fromDate && !isNaN(daysToAdd)) {
+                var parts = fromDate.split('/');
+                var fromDateObj = new Date(parts[2], parts[1] - 1, parts[0]);
+
+                var newDate = new Date(fromDateObj.getTime() + (daysToAdd * 24 * 60 * 60 * 1000));
+
+                $("#datepicker-to").val((newDate.getDate()-1) + '/' + (newDate.getMonth() + 1) + '/' + newDate.getFullYear());
+            }
+        });
+
+        $('#btn-submit').on('click', function () {
+            $(this).html("Saving...");
+            console.log('click')
+
+            if (  $('#Title').val() != "") {
+
+                $('#exampleModal').modal('toggle');
+            }
+
+        })
+    });
+
+
+
+
+
+    $(document).ready(function () {
+        $('#grid').on('click', '#deleteVisit', function () {
+            var visitId = $(this).data("visitid");
+            console.log("Delete Visit ID: " + visitId);
+
+        });
+
+
+        $("#comboBox").kendoComboBox({
+            //index: 0,
+            placeholder: "Select Type",
+            dataTextField: "Name",
+            dataValueField: "Id",
+            filter: "contains",
+            dataSource: {
+                transport: {
+                    serverFiltering: true,
+                    read: {
+                        dataType: "JSON",
+                        url: "https://localhost:44306/visits/GetAllVisitType"
+                    }
+                }
+            }
+        });
+    });
+
+
+
+</script>
+

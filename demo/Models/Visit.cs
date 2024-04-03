@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -9,11 +10,13 @@ namespace demo.Models
     {
         public int VisitId { get; set; }
 
+        [Required(ErrorMessage = "Please enter Title.")]
+
         public string Title { get; set; }
 
-        public DateTime From { get; set; }
+        public DateTime? From { get; set; }  
 
-        public DateTime To { get; set; }
+        public DateTime? To { get; set; }  
 
         public int NumberOfDays { get; set; }
 
@@ -21,7 +24,8 @@ namespace demo.Models
 
         public int VisitTypeId { get; set; }
 
-        public VisitType VisitType { get; set; }
+        [Required(ErrorMessage = "Please enter VisitType.")]
+        public virtual VisitType VisitType { get; set; }
 
     }
 }

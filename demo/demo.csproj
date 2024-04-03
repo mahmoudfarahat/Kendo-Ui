@@ -162,6 +162,7 @@
     <Compile Include="AutofacConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\VisitsController.cs" />
+    <Compile Include="CustomNullableDateModelBinder.cs" />
     <Compile Include="CustomDateModelBinder.cs" />
     <Compile Include="DataConfiguration\VisitConfiguration.cs" />
     <Compile Include="DataConfiguration\VisitTypeConfiguration.cs" />
@@ -174,8 +175,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\Implementions\VisitRepository.cs" />
     <Compile Include="Repositories\Implementions\Repository.cs" />
+    <Compile Include="Repositories\Implementions\VisitTypeRepository.cs" />
     <Compile Include="Repositories\Interfaces\IRepository.cs" />
     <Compile Include="Repositories\Interfaces\IVisitRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IVisitTypeRepository.cs" />
     <Compile Include="Services\Implementions\VisitsService.cs" />
     <Compile Include="Services\Interfaces\IVisitsService.cs" />
     <Compile Include="ViewModels\VisitViewModel.cs" />
@@ -219,6 +222,7 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Visits\Index.cshtml" />
+    <Content Include="Views\Visits\_EditModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

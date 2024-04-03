@@ -16,8 +16,8 @@ namespace demo.DataConfiguration
             Property(x => x.VisitId).HasColumnName("VisitId").HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             HasKey(x => x.VisitId);
             Property(x => x.Title).HasColumnName("Title");
-            Property(x => x.From).HasColumnName("From");
-            Property(x => x.To).HasColumnName("To");
+            Property(x => x.From).HasColumnName("From").IsOptional(); ;
+            Property(x => x.To).HasColumnName("To").IsOptional(); ;
             Property(x => x.NumberOfDays).HasColumnName("NumberOfDays");
             Property(x => x.VisitTypeId).HasColumnName("VisitTypeId");
             Property(x => x.Notes).HasColumnName("Notes");

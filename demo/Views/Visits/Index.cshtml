@@ -2,37 +2,42 @@
 @using Kendo.Mvc.UI
 @{
     ViewBag.Title = "Index";
+
+    //string fromMethod = "POST";
+    //if (Model.Any())
+    //{
+    //    fromMethod = "PUT";
+    //}
+
 }
 
 @section Styles
 {
     <style type="text/css">
         .grid-header {
-            display:flex;
-                justify-content: space-between;
-                align-items:center;
-        }
-        .btn-create{
-           
-            height : 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
+        .btn-create {
+            height: 50px;
+        }
     </style>
 }
 
 <div id="resultDiv">
-    @* Result will be displayed here *@
-</div>
+ </div>
 
 
 
 <div class="grid-header">
 
 
-
+ 
     <h2>Index</h2>
 
-    <button type="button" class="btn btn-primary btn-create" data-toggle="modal" data-target="#exampleModal">
+    <button type="button" class="btn btn-primary btn-create" id="btn-create"  >
         Create Visit
     </button>
 
@@ -50,7 +55,7 @@
         columns.Bound(p => p.From);
         columns.Bound(p => p.To);
         columns.Bound(p => p.NumberOfDays);
-        columns.Bound(p => p.VisitTypeId);
+        columns.Bound(p => p.VisitType);
         columns.Bound(p => p.Notes);
         columns.Bound(p => p.VisitId).Title("Actions").ClientTemplate("<Button type='button' data-visitid='#= VisitId #' class='btn-danger ' id='deleteVisit'>Delete</Button>");
     })
@@ -61,8 +66,13 @@
         .Refresh(true)
     )
     .Sortable()
-
+    .Selectable()
     .Filterable()
+    .Events(events => events
+            .Change("onChange")
+
+
+        )
     .DataSource(dataSource => dataSource
         .Ajax()
          .PageSize(10)
@@ -70,69 +80,62 @@
     )
 )
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Create Visit</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                @using (Ajax.BeginForm("CreateVisit", "Visits", new AjaxOptions
-                {
-                    HttpMethod = "POST",
-                    UpdateTargetId = "resultDiv",
-                    OnSuccess = "handleSuccess"
-                }, new { id = "create-from" }))
 
-                {<div class="form-group">
-    <label for="usr">Title:</label>
-    @*<input type="text" name="Title" class="form-control" id="usr">*@
-    @(Html.Kendo().TextBox()
-        .Name("Title")  
-        .Value("John Doe")
-         .HtmlAttributes(new { @class = "form-control" })
-    )
+ @*@Html.Partial("_EditModal")*@
+<div id="exampleModalDiv">
+
 </div>
-                 <div class="form-group">
-                     <label  >From:</label>
-                      <input id="datepicker-from" name="From" class="form-control" />
-                 </div>
-                    <div class="form-group">
-                        <label  >To:</label>
-                        <input id="datepicker-to"   name="To" class="form-control"  />
-                    </div>
-                    <div class="form-group">
-                        <label for="pwd">Number of Days:</label>
-                        <input type="number" name="NumberOfDays" class="form-control" id="pwd">
-                    </div>
-                    <div class="form-group">
-                        <label for="pwd">Notes</label>
-                        <input type="text" name="Notes" class="form-control" id="pwd">
-                    </div>
-                    <div class="form-group">
-                        <label for="pwd">Visit Type</label>
-                        <input type="number" name="VisitTypeId" class="form-control" id="pwd">
-                    </div>
-
-
-
-                }
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" form="create-from" id="btn-submit" class="btn btn-primary">Save changes</button>
-
-            </div>
-        </div>
-    </div>
-</div>
-
 
 @section scripts {
+    <script>
 
+        $(document).ready(function () {
+
+
+            $('#btn-create').on('click', function () {
+                $.ajax({
+                    url: '/visits/AddEdit', // Assuming "Item" is your controller name
+                    type: 'GET',
+                    //  data: { id: selectedItem.VisitId },
+                    success: function (data) {
+                        //console.log(data)
+                        $('#exampleModalDiv').html(data);
+                        $('#exampleModal').modal('show');
+                    },
+                    error: function () {
+                        alert('Error loading Create Modal.');
+                    }
+                });
+            })
+        });
+
+
+
+        function onChange(arg) {
+
+                   var entityGrid = $("#grid").data("kendoGrid");
+            var selectedItem = entityGrid.dataItem(entityGrid.select());
+            //console.log(selectedItem)
+
+            //$('#visitIdInput').val(selectedItem.VisitId);
+             $.ajax({
+                 url: '/visits/AddEdit/' + selectedItem.VisitId, // Assuming "Item" is your controller name
+                   type: 'GET',
+                   //  data: { id: selectedItem.VisitId },
+                 success: function (data) {
+                     //console.log(data)
+                        $('#exampleModalDiv').html(data);
+                        $('#exampleModal').modal('show');
+                   },
+                   error: function () {
+                       alert('Error loading edit modal.');
+                   }
+               });
+
+        }
+
+
+    </script>
     <script>
 
         function handleSuccess(result) {
@@ -145,37 +148,28 @@
 
         }
 
-        $(document).ready(function () {
-            $('#btn-submit').on('click', function () {
-                $(this).html("Saving...");
-                console.log('click')
-                $('#exampleModal').modal('toggle');
-            })
-        });
+        //$(document).ready(function () {
+
+
+        //    $('#btn-submit').on('click', function () {
+        //        //$(this).html("Saving...");
+        //        //console.log('click')
+        //        $('#exampleModal').modal('toggle');
+        //    })
+        //});
 
 
 
         $(document).ready(function () {
-             $('#grid').on('click', '#deleteVisit', function () {
+            $('#grid').on('click', '#deleteVisit', function () {
                 var visitId = $(this).data("visitid");
-                 console.log("Delete Visit ID: " + visitId);
+                console.log("Delete Visit ID: " + visitId);
 
-             });
-        });
-
-
-        $(document).ready(function () {
-            // create DatePicker from input HTML element
-            $("#datepicker-to").kendoDatePicker({
-                format: "dd/MM/yyyy",
-                dateInput: true
-            });
-
-            $("#datepicker-from").kendoDatePicker({
-                format: "dd/MM/yyyy",
-                dateInput: true
             });
         });
+
+
+       
     </script>
 
 }

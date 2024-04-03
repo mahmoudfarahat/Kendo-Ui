@@ -10,14 +10,18 @@ namespace demo.Services.Interfaces
 {
     public interface IVisitsService
     {
-        IReadOnlyList<Visit> GetAllPaginated(int page , int pageSize);
+        IReadOnlyList<VisitViewModel> GetAllPaginated(int page , int pageSize);
 
 
         void Add(VisitViewModel visitViewModel );
 
+        void Update(VisitViewModel visitViewModel);
+
         void Delete(int Id);
         int Count();
 
+        IReadOnlyList<VisitType> GetAllVisitTypes();
 
+        Visit GetById(int Id);
     }
 }

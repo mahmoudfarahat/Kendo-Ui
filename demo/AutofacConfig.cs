@@ -32,7 +32,11 @@ namespace demo
 
             builder.RegisterType<VisitRepository>().As<IVisitRepository>().InstancePerRequest();
 
+            builder.RegisterType<VisitTypeRepository>().As<IVisitTypeRepository>().InstancePerRequest();
+
             builder.RegisterType<VisitsService>().As<IVisitsService>().InstancePerRequest();
+
+
 
             // Build the container
             var container = builder.Build();

@@ -11,9 +11,9 @@ namespace demo.Models
     {
         public ApplicationDbContext() : base("DefaultConnection") { }
 
-        public DbSet<Visit> visits { get; set; }
+        public virtual DbSet<Visit> visits { get; set; }
 
-        public DbSet<VisitType> VisitTypes { get; set; }
+        public virtual DbSet<VisitType> VisitTypes { get; set; }
 
 
 

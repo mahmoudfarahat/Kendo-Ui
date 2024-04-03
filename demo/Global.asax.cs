@@ -18,6 +18,7 @@ namespace demo
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AutofacConfig.Configure();
             ModelBinders.Binders.Add(typeof(DateTime), new CustomDateModelBinder());
+            ModelBinders.Binders.Add(typeof(Nullable<DateTime>), new CustomNullableDateModelBinder());
 
         }
     }

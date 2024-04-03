@@ -6,12 +6,13 @@
     <title>@ViewBag.Title - Visits</title>
     <link href="~/Content/kendo/2018.3.911/kendo.common.min.css" rel="stylesheet" />
     <link href="~/Content/kendo/2018.3.911/kendo.default.min.css" rel="stylesheet" />
- 
+
     @RenderSection("Styles", required: false);
 
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
+    
     @*@Scripts.Render("~/bundles/Kendo")*@
 
     @Scripts.Render("~/bundles/Kendo")
@@ -47,7 +48,8 @@
     </div>
 
     <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
     @*@Scripts.Render("~/bundles/jquery")*@
     @*@Scripts.Render("~/bundles/Kendo")*@
     @*@Scripts.Render("~/bundles/Kendo")*@

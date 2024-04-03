@@ -17,5 +17,9 @@ namespace demo.Repositories.Interfaces
 
         int Count();
 
+        void Update(T entity);
+
+        T GetByid(TKey tkey);
+
     }
 }
